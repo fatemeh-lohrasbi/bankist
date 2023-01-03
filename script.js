@@ -58,4 +58,19 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
+const discplayMov = function (movments) {
+  containerMovements.innerHTML = '';
+
+  movments.forEach((mov, i) => {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+    const html = `
+        <div class="movements__row">
+          <div class="movements__type movements__type--${type}">${i + 1} ${type} deposit</div>
+          <div class="movements__value">${mov}€</div>
+        </div>
+  `
+    containerMovements.insertAdjacentHTML("afterbegin", html)
+  })
+}
+discplayMov(account1.movements)
 
