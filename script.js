@@ -87,3 +87,9 @@ const createUserName = function (accs) {
   })
 }
 createUserName(accounts)
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, cur) => acc + cur, 0);
+  labelBalance.textContent = `${balance} Eur`;
+}
+calcDisplayBalance(account1.movements)
