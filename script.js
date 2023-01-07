@@ -93,3 +93,26 @@ const calcDisplayBalance = function (movements) {
   labelBalance.textContent = `${balance} Eur`;
 }
 calcDisplayBalance(account1.movements)
+
+
+const calcDisplaySummary = function (movments) {
+  const incomes = movments.filter(elm => elm > 0)
+    .reduce((acc, elm) => acc + elm, 0);
+  labelSumIn.textContent = `${incomes} €`;
+
+  const out = movments.filter(elm => elm < 0)
+    .reduce((acc, elm) => acc + elm, 0);
+  labelSumOut.textContent = `${out} €`;
+
+  const interest = movments
+    .filter(elm => elm > 0)
+    .map(deposite => (deposite * 1 / 2) / 100)
+    .filter((elm, i, arr) => {
+      console.log(arr);
+      return elm >= 1;
+    })
+    .reduce((acc, elm) => acc + elm, 0);
+  labelSumInterest.textContent = `${interest}€`;
+}
+calcDisplaySummary(account1.movements);
+
