@@ -58,10 +58,10 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
-const discplayMov = function (movments) {
+const discplayMov = function (movements) {
   containerMovements.innerHTML = '';
 
-  movments.forEach((mov, i) => {
+  movements.forEach((mov, i) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
         <div class="movements__row">
@@ -72,7 +72,6 @@ const discplayMov = function (movments) {
     containerMovements.insertAdjacentHTML("afterbegin", html)
   })
 }
-discplayMov(account1.movements)
 
 
 
@@ -92,21 +91,22 @@ const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, cur) => acc + cur, 0);
   labelBalance.textContent = `${balance} Eur`;
 }
-calcDisplayBalance(account1.movements)
 
 
-const calcDisplaySummary = function (movments) {
-  const incomes = movments.filter(elm => elm > 0)
+const calcDisplaySummary = function (account) {
+  const incomes = account.movements
+    .filter(elm => elm > 0)
     .reduce((acc, elm) => acc + elm, 0);
   labelSumIn.textContent = `${incomes} €`;
 
-  const out = movments.filter(elm => elm < 0)
+  const out = account.movements
+    .filter(elm => elm < 0)
     .reduce((acc, elm) => acc + elm, 0);
   labelSumOut.textContent = `${out} €`;
 
-  const interest = movments
+  const interest = account.movements
     .filter(elm => elm > 0)
-    .map(deposite => (deposite * 1 / 2) / 100)
+    .map(deposite => (deposite * account.interestRate) / 100)
     .filter((elm, i, arr) => {
       console.log(arr);
       return elm >= 1;
@@ -114,7 +114,6 @@ const calcDisplaySummary = function (movments) {
     .reduce((acc, elm) => acc + elm, 0);
   labelSumInterest.textContent = `${interest}€`;
 }
-calcDisplaySummary(account1.movements);
 
 
 
@@ -137,7 +136,7 @@ btnLogin.addEventListener('click', function (e) {
     calcDisplayBalance(currentAccount.movements);
 
     // display summary
-    calcDisplaySummary(currentAccount.movements);
+    calcDisplaySummary(currentAccount);
   }
 
 })
