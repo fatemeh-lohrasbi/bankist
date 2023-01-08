@@ -116,3 +116,28 @@ const calcDisplaySummary = function (movments) {
 }
 calcDisplaySummary(account1.movements);
 
+
+
+let currentAccount;
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault(); // preventing form sumbmitting
+  currentAccount = accounts.find(account => account.username === inputLoginUsername.value);
+  if (currentAccount?.pin === Number(inputLoginPin.value)) { //currentAccount? : if current account exists
+    // display ui and message
+    labelWelcome.textContent = `welcome ${currentAccount.owner.split(' ')[0]}`
+    containerApp.style.opacity = 2;
+    // clear fields
+    inputLoginUsername.value = '';
+    inputLoginPin.value = '';
+    inputLoginPin.blur(); // lose focus = remove cursor blinking
+    // display movements
+    discplayMov(currentAccount.movements);
+
+    // display balance
+    calcDisplayBalance(currentAccount.movements);
+
+    // display summary
+    calcDisplaySummary(currentAccount.movements);
+  }
+
+})
