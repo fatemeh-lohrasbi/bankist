@@ -116,7 +116,7 @@ const calcDisplaySummary = function (account) {
   labelSumInterest.textContent = `${interest}€`;
 }
 
-const updateUi = function(account){
+const updateUi = function (account) {
   // display movements
   discplayMov(account.movements);
 
@@ -134,12 +134,12 @@ btnLogin.addEventListener('click', function (e) {
   if (currentAccount?.pin === Number(inputLoginPin.value)) { //currentAccount? : if current account exists
     // display ui and message
     labelWelcome.textContent = `welcome ${currentAccount.owner.split(' ')[0]}`
-    containerApp.style.opacity = 2;
+    containerApp.style.opacity = 100;
     // clear fields
     inputLoginUsername.value = '';
     inputLoginPin.value = '';
     inputLoginPin.blur(); // lose focus = remove cursor blinking
-    
+
     updateUi(currentAccount);
   }
 
@@ -163,3 +163,23 @@ btnTransfer.addEventListener('click', function (e) {
     updateUi(currentAccount);
   }
 })
+
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === Number(inputClosePin.value)) {
+      const index = accounts.findIndex(acc => acc.username === currentAccount.username);
+      console.log(index)
+
+      // delete account
+      accounts.splice(index, 1);
+
+      // hide ui
+    containerApp.style.opacity = 0;
+    inputCloseUsername.value = inputClosePin.value = '';
+  }
+
+})
+
+
