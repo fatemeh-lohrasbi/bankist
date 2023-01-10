@@ -85,11 +85,12 @@ const createUserName = function (accs) {
     console.log(acc)
   })
 }
-createUserName(accounts)
+createUserName(accounts);
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, cur) => acc + cur, 0);
-  labelBalance.textContent = `${balance} Eur`;
+const calcDisplayBalance = function (account) {
+  account.balance = account.movements.reduce((acc, cur) => acc + cur, 0);
+  // account.balance = balance;
+  labelBalance.textContent = `${account.balance} Eur`;
 }
 
 
@@ -115,7 +116,16 @@ const calcDisplaySummary = function (account) {
   labelSumInterest.textContent = `${interest}€`;
 }
 
+const updateUi = function(account){
+  // display movements
+  discplayMov(account.movements);
 
+  // display balance
+  calcDisplayBalance(account);
+
+  // display summary
+  calcDisplaySummary(account);
+}
 
 let currentAccount;
 btnLogin.addEventListener('click', function (e) {
@@ -129,14 +139,27 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = '';
     inputLoginPin.value = '';
     inputLoginPin.blur(); // lose focus = remove cursor blinking
-    // display movements
-    discplayMov(currentAccount.movements);
-
-    // display balance
-    calcDisplayBalance(currentAccount.movements);
-
-    // display summary
-    calcDisplaySummary(currentAccount);
+    
+    updateUi(currentAccount);
   }
 
+})
+
+
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const reciverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
+  console.log(amount, reciverAcc)
+  inputTransferTo.value = inputTransferAmount.value = ''; // equal with below code
+  // inputTransferTo.value = '';
+  // inputTransferAmount.value = '';
+
+  if (amount > 0 && reciverAcc && currentAccount.balance >= amount &&
+    reciverAcc?.username !== currentAccount.username) {
+    // doing the transfer
+    currentAccount.movements.push(-amount);
+    reciverAcc.movements.push(amount);
+    updateUi(currentAccount);
+  }
 })
