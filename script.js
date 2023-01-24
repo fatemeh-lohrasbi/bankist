@@ -67,7 +67,7 @@ const discplayMov = function (movements, sort = false) {
     const html = `
         <div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type} deposit</div>
-          <div class="movements__value">${mov}€</div>
+          <div class="movements__value">${mov.toFixed(2)}€</div>
         </div>
   `
     containerMovements.insertAdjacentHTML("afterbegin", html)
@@ -90,7 +90,7 @@ createUserName(accounts);
 const calcDisplayBalance = function (account) {
   account.balance = account.movements.reduce((acc, cur) => acc + cur, 0);
   // account.balance = balance;
-  labelBalance.textContent = `${account.balance} Eur`;
+  labelBalance.textContent = `${account.balance.toFixed(2)} Eur`;
 }
 
 
@@ -98,12 +98,12 @@ const calcDisplaySummary = function (account) {
   const incomes = account.movements
     .filter(elm => elm > 0)
     .reduce((acc, elm) => acc + elm, 0);
-  labelSumIn.textContent = `${incomes} €`;
+  labelSumIn.textContent = `${incomes.toFixed(2)} €`;
 
   const out = account.movements
     .filter(elm => elm < 0)
     .reduce((acc, elm) => acc + elm, 0);
-  labelSumOut.textContent = `${out} €`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)} €`;
 
   const interest = account.movements
     .filter(elm => elm > 0)
@@ -113,7 +113,7 @@ const calcDisplaySummary = function (account) {
       return elm >= 1;
     })
     .reduce((acc, elm) => acc + elm, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 }
 
 const updateUi = function (account) {
@@ -166,7 +166,7 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = inputLoanAmount.value;
+  const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // add movment 
     currentAccount.movements.push(amount);
@@ -199,3 +199,11 @@ btnSort.addEventListener('click', function(e){
   discplayMov(currentAccount.movements, !sorted)
   sorted = !sorted;
 })
+
+
+// labelBalance.addEventListener('click', function(){
+//   const movementsUi = Array.from(document.querySelectorAll('.movements__value'),
+//   el => Number(el.textContent.replace('€','')))
+
+//   console.log(movementsUi);
+// })
