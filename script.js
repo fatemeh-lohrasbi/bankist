@@ -141,6 +141,12 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.blur(); // lose focus = remove cursor blinking
 
     updateUi(currentAccount);
+
+
+    [...document.querySelectorAll('.movements__row')].
+    forEach((row, i) => {
+      if (i % 2 === 0) row.style.backgroundColor = '#def9f8'
+    })
   }
 
 })
@@ -207,3 +213,4 @@ btnSort.addEventListener('click', function(e){
 
 //   console.log(movementsUi);
 // })
+
