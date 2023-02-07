@@ -71,15 +71,25 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
-const discplayMov = function (movements, sort = false) {
+const displayMov = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const moves = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const moves = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
   moves.forEach((mov, i) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const date = new Date(acc.movementsDates[i]);
+
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
+    const day = `${date.getDate()}`.padStart(2, 0);
+
+    const displayDate = `${day}/${month}/${year}`;
+
     const html = `
         <div class="movements__row">
           <div class="movements__type movements__type--${type}">${i + 1} ${type} deposit</div>
+          <div class="movements__date">${displayDate}</div>
           <div class="movements__value">${mov.toFixed(2)}€</div>
         </div>
   `
@@ -131,7 +141,7 @@ const calcDisplaySummary = function (account) {
 
 const updateUi = function (account) {
   // display movements
-  discplayMov(account.movements);
+  displayMov(account);
 
   // display balance
   calcDisplayBalance(account);
@@ -148,7 +158,18 @@ btnLogin.addEventListener('click', function (e) {
     // display ui and message
     labelWelcome.textContent = `welcome ${currentAccount.owner.split(' ')[0]}`
     containerApp.style.opacity = 100;
-    // clear fields
+
+    // create current date and time
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = `${now.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
+    const day = `${now.getDate()}`.padStart(2, 0);
+
+    const hour = `${now.getHours()}`.padStart(2,0);
+    const min = `${now.getMinutes()}`.padStart(2, 0);
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+
+    // clear input fields
     inputLoginUsername.value = '';
     inputLoginPin.value = '';
     inputLoginPin.blur(); // lose focus = remove cursor blinking
@@ -161,25 +182,12 @@ btnLogin.addEventListener('click', function (e) {
       if (i % 2 === 0) row.style.backgroundColor = '#def9f8'
     })
   }
-
 })
 
 // fake login
-currentAccount = account1;
-updateUi(currentAccount);
-containerApp.style.opacity = 100;
-
-
-// date
-const now = new Date();
-const year = now.getFullYear();
-const month = `${now.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
-const day = `${now.getDate()}`.padStart(2,0);
-
-const hour = now.getHours();
-const min = now.getMinutes();
-labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
-
+// currentAccount = account1;
+// updateUi(currentAccount);
+// containerApp.style.opacity = 100;
 
 
 btnTransfer.addEventListener('click', function (e) {
@@ -193,9 +201,16 @@ btnTransfer.addEventListener('click', function (e) {
 
   if (amount > 0 && reciverAcc && currentAccount.balance >= amount &&
     reciverAcc?.username !== currentAccount.username) {
+
     // doing the transfer
     currentAccount.movements.push(-amount);
     reciverAcc.movements.push(amount);
+
+    // add transfer date
+    currentAccount.movementsDates.push(new Date());
+    reciverAcc.movementsDates.push(new Date().toISOString());
+
+    // updating ui
     updateUi(currentAccount);
   }
 })
@@ -206,6 +221,10 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // add movment 
     currentAccount.movements.push(amount);
+
+    // add loan date
+    currentAccount.movementsDates.push(new Date().toISOString());
+
 
     // update ui
     updateUi(currentAccount);
@@ -225,14 +244,14 @@ btnClose.addEventListener('click', function (e) {
 
     // hide ui
     containerApp.style.opacity = 0;
-    inputCloseUsername.value = inputClosePin.value = '';
+    inputCloseUsername.value = inputClosePin.value = '';  
   }
 })
 
 let sorted = false
 btnSort.addEventListener('click', function(e){
   e.preventDefault();
-  discplayMov(currentAccount.movements, !sorted)
+  displayMov(currentAccount.movements, !sorted)
   sorted = !sorted;
 })
 
