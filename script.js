@@ -185,27 +185,9 @@ btnLogin.addEventListener('click', function (e) {
 })
 
 // fake login
-<<<<<<< HEAD
 // currentAccount = account1;
 // updateUi(currentAccount);
 // containerApp.style.opacity = 100;
-=======
-currentAccount = account1;
-updateUi(currentAccount);
-containerApp.style.opacity = 100;
-
-
-// date
-const now = new Date();
-const year = now.getFullYear();
-const month = `${now.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
-const day = `${now.getDate()}`.padStart(2,0);
-
-const hour = now.getHours();
-const min = now.getMinutes();
-labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
-
->>>>>>> 699ecabbd9a4c00c9baae77b24eb97f0f08c918c
 
 
 btnTransfer.addEventListener('click', function (e) {
