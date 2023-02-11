@@ -70,6 +70,13 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const formatMovementDate = function (date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
+  const day = `${date.getDate()}`.padStart(2, 0);
+
+  return `${day}/${month}/${year}`;
+}
 
 const displayMov = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -79,12 +86,7 @@ const displayMov = function (acc, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(acc.movementsDates[i]);
-
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
-    const day = `${date.getDate()}`.padStart(2, 0);
-
-    const displayDate = `${day}/${month}/${year}`;
+    const displayDate = formatMovementDate(date);
 
     const html = `
         <div class="movements__row">
@@ -165,7 +167,7 @@ btnLogin.addEventListener('click', function (e) {
     const month = `${now.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
     const day = `${now.getDate()}`.padStart(2, 0);
 
-    const hour = `${now.getHours()}`.padStart(2,0);
+    const hour = `${now.getHours()}`.padStart(2, 0);
     const min = `${now.getMinutes()}`.padStart(2, 0);
     labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
 
@@ -178,9 +180,9 @@ btnLogin.addEventListener('click', function (e) {
 
 
     [...document.querySelectorAll('.movements__row')].
-    forEach((row, i) => {
-      if (i % 2 === 0) row.style.backgroundColor = '#def9f8'
-    })
+      forEach((row, i) => {
+        if (i % 2 === 0) row.style.backgroundColor = '#def9f8'
+      })
   }
 })
 
@@ -244,12 +246,12 @@ btnClose.addEventListener('click', function (e) {
 
     // hide ui
     containerApp.style.opacity = 0;
-    inputCloseUsername.value = inputClosePin.value = '';  
+    inputCloseUsername.value = inputClosePin.value = '';
   }
 })
 
 let sorted = false
-btnSort.addEventListener('click', function(e){
+btnSort.addEventListener('click', function (e) {
   e.preventDefault();
   displayMov(currentAccount.movements, !sorted)
   sorted = !sorted;
