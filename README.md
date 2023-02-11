@@ -1,7 +1,7 @@
 # bankist
 js array methods 
 
-there are 2 user for login
+there are 2 users for login
 
 user 1 info:
 username : fl
