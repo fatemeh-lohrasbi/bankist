@@ -18,7 +18,7 @@ const account1 = {
     '2023-02-10T10:51:36.790Z',
   ],
   currency: 'EUR',
-  locale: 'pt-PT', // de-DE
+  locale: 'fa-IR', // de-DE
 };
 
 const account2 = {
@@ -70,7 +70,7 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const formatMovementDate = function (date) {
+const formatMovementDate = function (date, locale) {
 
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs((date1 - date2) / (1000 * 60 * 60 * 24)));
@@ -83,13 +83,15 @@ const formatMovementDate = function (date) {
   if (daysPassed === 0) return 'Today';
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed < 7) return `${daysPassed} days ago`;
-  if (daysPassed === 7) return  'Last week';
+  if (daysPassed === 7) return 'Last week';
   else {
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
-    const day = `${date.getDate()}`.padStart(2, 0);
+    // const year = date.getFullYear();
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
+    // const day = `${date.getDate()}`.padStart(2, 0);
 
-    return `${day}/${month}/${year}`;
+    // return `${day}/${month}/${year}`;
+
+    return new Intl.DateTimeFormat(locale).format(date)
   }
 
 }
@@ -102,7 +104,7 @@ const displayMov = function (acc, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(acc.movementsDates[i]);
-    const displayDate = formatMovementDate(date);
+    const displayDate = formatMovementDate(date, acc.locale);
 
     const html = `
         <div class="movements__row">
@@ -179,13 +181,25 @@ btnLogin.addEventListener('click', function (e) {
 
     // create current date and time
     const now = new Date();
-    const year = now.getFullYear();
-    const month = `${now.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
-    const day = `${now.getDate()}`.padStart(2, 0);
+    let options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: "numeric",
+      month: "long",
+      weekday: "long",
+      year: "numeric",
+    };
+    // const local = navigator.language; // we can use this if we want get our data from browser not manully, otherwise can use iso code manully ('fa-IR')
+    // labelDate.textContent = new Intl.DateTimeFormat('fa-IR', options).format(now) 
+    labelDate.textContent = new Intl.DateTimeFormat(currentAccount.locale, options).format(now)
 
-    const hour = `${now.getHours()}`.padStart(2, 0);
-    const min = `${now.getMinutes()}`.padStart(2, 0);
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+    // const year = now.getFullYear();
+    // const month = `${now.getMonth() + 1}`.padStart(2, 0); // getMonth method is zero base so we should add 1 to it
+    // const day = `${now.getDate()}`.padStart(2, 0);
+
+    // const hour = `${now.getHours()}`.padStart(2, 0);
+    // const min = `${now.getMinutes()}`.padStart(2, 0);
+    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
 
     // clear input fields
     inputLoginUsername.value = '';
@@ -203,7 +217,7 @@ btnLogin.addEventListener('click', function (e) {
 })
 
 // fake login
-// currentAccount = account1;
+// currentAccount = account2;
 // updateUi(currentAccount);
 // containerApp.style.opacity = 100;
 
