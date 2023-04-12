@@ -96,7 +96,7 @@ const formatMovementDate = function (date, locale) {
 
 }
 
-const formatCur = function(value, locale, currency){
+const formatCur = function (value, locale, currency) {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
@@ -263,15 +263,20 @@ btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // add movment 
-    currentAccount.movements.push(amount);
 
-    // add loan date
-    currentAccount.movementsDates.push(new Date().toISOString());
+   setTimeout(() => {
+     // add movment 
+     currentAccount.movements.push(amount);
+
+     // add loan date
+     currentAccount.movementsDates.push(new Date().toISOString());
 
 
-    // update ui
-    updateUi(currentAccount);
+     // update ui
+     updateUi(currentAccount);
+
+   }, 2000)
+
   }
   inputLoanAmount.value = '';
 })
