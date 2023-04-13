@@ -294,6 +294,12 @@ btnTransfer.addEventListener('click', function (e) {
 
     // updating ui
     updateUi(currentAccount);
+
+
+    // reset timer whenever the user does a transfer or request a loan
+    clearInterval(runningTimer);
+    runningTimer = startLogOutTime();
+
   }
 })
 
@@ -313,11 +319,15 @@ btnLoan.addEventListener('click', function (e) {
       // update ui
       updateUi(currentAccount);
 
+      // reset timer whenever the user does a transfer or request a loan
+      clearInterval(runningTimer);
+      runningTimer = startLogOutTime();
+
     }, 2000)
 
   }
   inputLoanAmount.value = '';
-})
+ })
 
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
