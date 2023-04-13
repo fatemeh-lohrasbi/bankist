@@ -218,6 +218,9 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.value = '';
     inputLoginPin.blur(); // lose focus = remove cursor blinking
 
+    startLogOutTime();
+    return timer;
+
     updateUi(currentAccount);
 
 
@@ -227,6 +230,38 @@ btnLogin.addEventListener('click', function (e) {
       })
   }
 })
+
+const startLogOutTime = function () {
+  const tick = () => {
+    const min = String(Math.floor(time / 60)).padStart(2, 0);
+    const second = String(time % 60).padStart(2, 0);
+
+    // in each call, print the remainig time to ui
+    labelTimer.textContent = `${min}: ${second}`;
+
+    // when 0 seconds, stop timer and logout user
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+
+    // decrese 1s
+    time--;
+  } 
+
+  // set time to 5 minute
+  let time = 20;
+  // call the timer every second 
+  tick() // we call tick function to run immediately
+  const timer = setInterval(tick ,1000);
+
+  
+
+}
+
+
+
 
 // fake login
 // currentAccount = account2;
@@ -264,18 +299,18 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
 
-   setTimeout(() => {
-     // add movment 
-     currentAccount.movements.push(amount);
+    setTimeout(() => {
+      // add movment 
+      currentAccount.movements.push(amount);
 
-     // add loan date
-     currentAccount.movementsDates.push(new Date().toISOString());
+      // add loan date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
 
-     // update ui
-     updateUi(currentAccount);
+      // update ui
+      updateUi(currentAccount);
 
-   }, 2000)
+    }, 2000)
 
   }
   inputLoanAmount.value = '';
