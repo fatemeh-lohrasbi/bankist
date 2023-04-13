@@ -182,7 +182,8 @@ const updateUi = function (account) {
   calcDisplaySummary(account);
 }
 
-let currentAccount;
+let currentAccount, runningTimer;
+
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault(); // preventing form sumbmitting
   currentAccount = accounts.find(account => account.username === inputLoginUsername.value);
@@ -218,8 +219,10 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginPin.value = '';
     inputLoginPin.blur(); // lose focus = remove cursor blinking
 
-    startLogOutTime();
-    return timer;
+
+    // for fixing the problem of 2 timer of each account be active at the same time
+    if(runningTimer) clearInterval(runningTimer);
+    runningTimer = startLogOutTime();
 
     updateUi(currentAccount);
 
@@ -256,8 +259,8 @@ const startLogOutTime = function () {
   tick() // we call tick function to run immediately
   const timer = setInterval(tick ,1000);
 
-  
-
+  // for fixing the problem of 2 timer of each account be active at the same time
+  return timer;
 }
 
 
